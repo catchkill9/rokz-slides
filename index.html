@@ -9,7 +9,7 @@
   * { box-sizing:border-box; }
   html,body { margin:0; height:100%; font-family:"Segoe UI",system-ui,sans-serif; background:var(--ink); overflow:hidden; }
   .slide { position:absolute; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center;
-           text-align:center; padding:5vh 6vw; background:var(--sand); color:var(--ink); }
+           text-align:center; padding:4vh 6vw 84px; background:var(--sand); color:var(--ink); }
   .slide.on { display:flex; animation:pop .45s ease; }
   @keyframes pop { from { opacity:0; transform:scale(.96); } to { opacity:1; transform:none; } }
   .red { background:var(--red); color:#fff; }
@@ -36,9 +36,9 @@
   .sw { display:flex; gap:6px; justify-content:center; margin-bottom:.4em; }
   .sw i { width:34px; height:34px; border-radius:50%; display:block; border:2px solid rgba(0,0,0,.15); }
   .qnum { background:var(--red); color:#fff; border-radius:30px; padding:.2em .8em; font-size:clamp(1rem,2vw,1.3rem); }
-  .nav { position:fixed; bottom:2vh; left:0; right:0; display:flex; justify-content:center; gap:14px; z-index:10; }
+  .nav { position:fixed; bottom:2vh; right:2vw; display:flex; justify-content:flex-end; gap:14px; z-index:10; }
   .nav button { border:none; border-radius:50%; width:56px; height:56px; font-size:1.6rem; background:rgba(0,0,0,.25); color:#fff; cursor:pointer; }
-  .stone { width:min(520px,70vw); aspect-ratio:1.6; margin:.3em auto .6em; border-radius:48% 52% 44% 56% / 58% 46% 54% 42%;
+  .stone { width:min(420px,60vw,55vh); aspect-ratio:1.6; margin:.3em auto .6em; border-radius:48% 52% 44% 56% / 58% 46% 54% 42%;
            background:radial-gradient(circle at 35% 30%, #c9c3bd, #8d8680 70%, #6f6863); display:flex; align-items:center; justify-content:center;
            box-shadow:0 14px 0 rgba(0,0,0,.15); transform:rotate(-4deg); }
   .stone span { font-family:"Comic Sans MS","Segoe Print",cursive; font-weight:800; color:#111; font-size:clamp(2.4rem,8vw,5rem); }
@@ -48,8 +48,10 @@
            min-width:40px; height:40px; line-height:40px; font-weight:800; font-size:1.3rem; }
   .votes:empty { display:none; }
   .results { list-style:none; padding:0; }
-  .results li { background:#fff; border-radius:16px; padding:.4em .8em; margin:.4em 0; box-shadow:0 4px 0 var(--pink); }
-  .results span { display:block; font-size:.7em; opacity:.7; }
+  .results { width:min(900px,90vw); }
+  .results li { background:#fff; border-radius:14px; padding:.25em .7em; margin:.3em 0; box-shadow:0 3px 0 var(--pink);
+                font-size:clamp(.95rem,2.2vw,1.5rem); display:flex; justify-content:space-between; gap:1em; text-align:left; }
+  .results span { opacity:.7; }
   .count { position:fixed; top:2vh; right:3vw; color:rgba(0,0,0,.35); font-weight:700; z-index:10; }
   .red ~ .count { color:rgba(255,255,255,.6); }
 </style>
