@@ -43,6 +43,12 @@
            box-shadow:0 14px 0 rgba(0,0,0,.15); transform:rotate(-4deg); }
   .stone span { font-family:"Comic Sans MS","Segoe Print",cursive; font-weight:800; color:#111; font-size:clamp(2.4rem,8vw,5rem); }
   .need { list-style:none; padding:0; }
+  .two { display:flex; flex-wrap:wrap; gap:4vw; justify-content:center; align-items:flex-start; }
+  .two > div { width:min(380px,42vw); }
+  .two .stone { width:100%; }
+  .two p { font-size:clamp(1rem,2.2vw,1.5rem); margin:.2em 0; }
+  .stone.you { transform:rotate(5deg); background:radial-gradient(circle at 35% 30%, #d8cfe8, #9a8fb0 70%, #7d7294); }
+  .stone.you span { font-size:clamp(1.6rem,4.5vw,3rem); line-height:1.2; }
   .choice { position:relative; }
   .votes { position:absolute; top:-14px; right:-14px; font-style:normal; background:var(--red); color:#fff; border-radius:50%;
            min-width:40px; height:40px; line-height:40px; font-weight:800; font-size:1.3rem; }
@@ -68,7 +74,7 @@
 <section class="slide">
   <h2>🤔 What is it?</h2>
   <ul>
-    <li>🎨 We paint a rock.</li>
+    <li>🎨 We paint a rock and give it a name.</li>
     <li>🌳 We hide it in a park or on a beach.</li>
     <li>🔍 Someone finds it. Then they hide it again.</li>
     <li>✈️ The rock can go far, even to other countries!</li>
@@ -78,7 +84,7 @@
 <section class="slide">
   <h2>🗺️ How it works</h2>
   <div class="steps">
-    <div class="step"><b>🎨</b><span>1. Paint a rock. Write <b style="display:inline;font-size:inherit">rokz.ie</b> on the back.</span></div>
+    <div class="step"><b>🎨</b><span>1. Give your rock a name. Paint it.</span></div>
     <div class="step"><b>🙈</b><span>2. Hide the rock.</span></div>
     <div class="step"><b>📱</b><span>3. Someone finds it. They go to rokz.ie and say where.</span></div>
     <div class="step"><b>📍</b><span>4. We see where the rock is on the map.</span></div>
@@ -86,10 +92,11 @@
 </section>
 
 <section class="slide">
-  <h2>✍️ Write the website on your rock!</h2>
-  <div class="stone"><span>rokz.ie</span></div>
-  <p>Then the finder knows where to go.</p>
-  <p>🖊️ Use a black pen. Write big!</p>
+  <h2>🪨 Your rock has 2 sides</h2>
+  <div class="two">
+    <div><div class="stone"><span>rokz.ie</span></div><p><b>Side 1:</b> rokz.ie<br>Lily writes this for you ✅</p></div>
+    <div><div class="stone you"><span>Rocky<br>🌈🐱</span></div><p><b>Side 2:</b> YOU write the rock's name<br>and paint a picture 🎨</p></div>
+  </div>
 </section>
 
 <section class="slide">
@@ -97,7 +104,7 @@
   <ul class="need">
     <li>🪨 A flat rock (as big as your hand)</li>
     <li>🎨 Paint</li>
-    <li>🖊️ A black pen</li>
+    <li>🖊️ A pen to write the name</li>
     <li>✨ Clear spray, so the rain does not wash it off</li>
   </ul>
 </section>
