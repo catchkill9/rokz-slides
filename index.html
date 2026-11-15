@@ -38,6 +38,18 @@
   .qnum { background:var(--red); color:#fff; border-radius:30px; padding:.2em .8em; font-size:clamp(1rem,2vw,1.3rem); }
   .nav { position:fixed; bottom:2vh; left:0; right:0; display:flex; justify-content:center; gap:14px; z-index:10; }
   .nav button { border:none; border-radius:50%; width:56px; height:56px; font-size:1.6rem; background:rgba(0,0,0,.25); color:#fff; cursor:pointer; }
+  .stone { width:min(520px,70vw); aspect-ratio:1.6; margin:.3em auto .6em; border-radius:48% 52% 44% 56% / 58% 46% 54% 42%;
+           background:radial-gradient(circle at 35% 30%, #c9c3bd, #8d8680 70%, #6f6863); display:flex; align-items:center; justify-content:center;
+           box-shadow:0 14px 0 rgba(0,0,0,.15); transform:rotate(-4deg); }
+  .stone span { font-family:"Comic Sans MS","Segoe Print",cursive; font-weight:800; color:#111; font-size:clamp(2.4rem,8vw,5rem); }
+  .need { list-style:none; padding:0; }
+  .choice { position:relative; }
+  .votes { position:absolute; top:-14px; right:-14px; font-style:normal; background:var(--red); color:#fff; border-radius:50%;
+           min-width:40px; height:40px; line-height:40px; font-weight:800; font-size:1.3rem; }
+  .votes:empty { display:none; }
+  .results { list-style:none; padding:0; }
+  .results li { background:#fff; border-radius:16px; padding:.4em .8em; margin:.4em 0; box-shadow:0 4px 0 var(--pink); }
+  .results span { display:block; font-size:.7em; opacity:.7; }
   .count { position:fixed; top:2vh; right:3vw; color:rgba(0,0,0,.35); font-weight:700; z-index:10; }
   .red ~ .count { color:rgba(255,255,255,.6); }
 </style>
@@ -66,9 +78,26 @@
   <div class="steps">
     <div class="step"><b>🎨</b><span>1. Paint a rock. Write <b style="display:inline;font-size:inherit">rokz.ie</b> on the back.</span></div>
     <div class="step"><b>🙈</b><span>2. Hide the rock.</span></div>
-    <div class="step"><b>📱</b><span>3. Someone finds it and goes to rokz.ie.</span></div>
+    <div class="step"><b>📱</b><span>3. Someone finds it. They go to rokz.ie and say where.</span></div>
     <div class="step"><b>📍</b><span>4. We see where the rock is on the map.</span></div>
   </div>
+</section>
+
+<section class="slide">
+  <h2>✍️ Write the website on your rock!</h2>
+  <div class="stone"><span>rokz.ie</span></div>
+  <p>Then the finder knows where to go.</p>
+  <p>🖊️ Use a black pen. Write big!</p>
+</section>
+
+<section class="slide">
+  <h2>🧰 What you need</h2>
+  <ul class="need">
+    <li>🪨 A flat rock (as big as your hand)</li>
+    <li>🎨 Paint</li>
+    <li>🖊️ A black pen</li>
+    <li>✨ Clear spray, so the rain does not wash it off</li>
+  </ul>
 </section>
 
 <section class="slide">
@@ -77,7 +106,7 @@
     <li>🗺️ A map of all the rocks</li>
     <li>🪨 A page for every rock, with photos</li>
     <li>📏 How far each rock went</li>
-    <li>🏆 Prizes for the rocks that go the farthest</li>
+    <li>🏆 The top rocks: who went the farthest?</li>
   </ul>
 </section>
 
@@ -101,7 +130,7 @@
 <section class="slide red">
   <p class="big">🎨</p>
   <h1>Now YOU help!</h1>
-  <p>Put your hand up 🙋</p>
+  <p>Put your hand up for your answer 🙋</p>
 </section>
 
 <section class="slide">
@@ -132,7 +161,7 @@
   <div class="choices">
     <div class="choice"><span class="n">🗺️</span>The map</div>
     <div class="choice"><span class="n">🔍</span>Find a rock</div>
-    <div class="choice"><span class="n">🏆</span>The prizes</div>
+    <div class="choice"><span class="n">🏆</span>The top rocks</div>
     <div class="choice"><span class="n">📸</span>New photos</div>
   </div>
 </section>
@@ -159,6 +188,11 @@
   </div>
 </section>
 
+<section class="slide">
+  <h2>🎉 Our class says…</h2>
+  <ul class="results" id="results"></ul>
+</section>
+
 <section class="slide red">
   <p class="big"><span class="rock">🪨</span></p>
   <h1>Let's go, rocks!</h1>
@@ -167,7 +201,7 @@
 </section>
 
 <div class="count" id="count"></div>
-<div class="nav"><button id="prev" aria-label="Back">◀</button><button id="next" aria-label="Next">▶</button></div>
+<div class="nav"><button id="prev" aria-label="Back">◀</button><button id="full" aria-label="Full screen">⛶</button><button id="next" aria-label="Next">▶</button></div>
 
 <script>
   const slides = [...document.querySelectorAll('.slide')];
@@ -193,12 +227,41 @@
     if (Math.abs(dx) > 50) show(i + (dx < 0 ? 1 : -1));
     x0 = null;
   });
-  document.querySelectorAll('.choices').forEach(group => {
-    group.querySelectorAll('.choice').forEach(c => c.onclick = () => {
-      group.querySelectorAll('.choice').forEach(o => o.classList.remove('pick'));
-      c.classList.add('pick');
+  document.getElementById('full').onclick = () => {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+  };
+  // Count hands: tap an answer once for every hand up. The top answer turns pink.
+  const groups = [...document.querySelectorAll('.choices')];
+  function mark(group) {
+    const cs = [...group.querySelectorAll('.choice')];
+    const max = Math.max(...cs.map(c => +c.dataset.v || 0));
+    cs.forEach(c => c.classList.toggle('pick', max > 0 && (+c.dataset.v || 0) === max));
+  }
+  groups.forEach(group => {
+    group.querySelectorAll('.choice').forEach(c => {
+      const v = document.createElement('em'); v.className = 'votes'; c.appendChild(v);
+      c.onclick = () => { c.dataset.v = (+c.dataset.v || 0) + 1; v.textContent = c.dataset.v; mark(group); };
+      c.oncontextmenu = e => { e.preventDefault(); c.dataset.v = Math.max(0, (+c.dataset.v || 0) - 1); v.textContent = +c.dataset.v ? c.dataset.v : ''; mark(group); };
     });
   });
+  function fillResults() {
+    const ul = document.getElementById('results');
+    ul.innerHTML = '';
+    groups.forEach(group => {
+      const q = group.parentElement.querySelector('.q').textContent;
+      const win = group.querySelector('.choice.pick');
+      const li = document.createElement('li');
+      const name = win ? [...win.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent).join('').trim() : '…';
+      const icon = win && win.querySelector('.n') ? win.querySelector('.n').textContent + ' ' : '';
+      li.innerHTML = '<span></span><b></b>';
+      li.firstChild.textContent = q + ' ';
+      li.lastChild.textContent = icon + name;
+      ul.appendChild(li);
+    });
+  }
+  const origShow = show;
+  show = n => { origShow(n); if (slides[i].querySelector('#results')) fillResults(); };
   show(0);
 </script>
 </body>
