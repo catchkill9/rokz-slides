@@ -6,11 +6,13 @@
 <title>rokz.cc - Travelling Rocks</title>
 <style>
   :root { --red:#b3122e; --coral:#e63946; --pink:#ffccd2; --sand:#fff1f1; --ink:#3a1015; }
-  * { box-sizing:border-box; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  button, .choice { touch-action:manipulation; -webkit-user-select:none; }
+  html,body { height:100vh; height:100dvh; }
   html,body { margin:0; height:100%; font-family:"Segoe UI",system-ui,sans-serif; background:var(--ink); overflow:hidden; }
-  .slide { position:absolute; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center;
+  .slide { position:absolute; top:0; right:0; bottom:0; left:0; display:none; -webkit-flex-direction:column; flex-direction:column; align-items:center; justify-content:center;
            text-align:center; padding:4vh 6vw 84px; background:var(--sand); color:var(--ink); }
-  .slide.on { display:flex; animation:pop .45s ease; }
+  .slide.on { display:-webkit-flex; display:flex; animation:pop .45s ease; }
   @keyframes pop { from { opacity:0; transform:scale(.96); } to { opacity:1; transform:none; } }
   .red { background:var(--red); color:#fff; }
   h1 { font-size:clamp(2.4rem,8vw,6rem); margin:.2em 0; }
@@ -38,14 +40,14 @@
   .qnum { background:var(--red); color:#fff; border-radius:30px; padding:.2em .8em; font-size:clamp(1rem,2vw,1.3rem); }
   .nav { position:fixed; bottom:2vh; right:2vw; display:flex; justify-content:flex-end; gap:14px; z-index:10; }
   .nav button { border:none; border-radius:50%; width:56px; height:56px; font-size:1.6rem; background:rgba(0,0,0,.25); color:#fff; cursor:pointer; }
-  .stone { width:min(420px,60vw,55vh); aspect-ratio:1.6; margin:.3em auto .6em; border-radius:48% 52% 44% 56% / 58% 46% 54% 42%;
+  .stone { width:min(420px,60vw,55vh); height:calc(min(420px,60vw,55vh) / 1.6); aspect-ratio:1.6; margin:.3em auto .6em; border-radius:48% 52% 44% 56% / 58% 46% 54% 42%;
            background:radial-gradient(circle at 35% 30%, #c9c3bd, #8d8680 70%, #6f6863); display:flex; align-items:center; justify-content:center;
            box-shadow:0 14px 0 rgba(0,0,0,.15); transform:rotate(-4deg); }
   .stone span { font-family:"Comic Sans MS","Segoe Print",cursive; font-weight:800; color:#111; font-size:clamp(2.4rem,8vw,5rem); }
   .need { list-style:none; padding:0; }
   .two { display:flex; flex-wrap:wrap; gap:4vw; justify-content:center; align-items:flex-start; }
   .two > div { width:min(380px,42vw); }
-  .two .stone { width:100%; }
+  .two .stone { width:100%; height:auto; min-height:140px; }
   .two p { font-size:clamp(1rem,2.2vw,1.5rem); margin:.2em 0; }
   .stone.you { transform:rotate(5deg); background:radial-gradient(circle at 35% 30%, #d8cfe8, #9a8fb0 70%, #7d7294); }
   .stone.you span { font-size:clamp(1.6rem,4.5vw,3rem); line-height:1.2; }
@@ -170,7 +172,7 @@
     if (['ArrowLeft', 'PageUp'].includes(e.key)) show(i - 1);
   });
   let x0 = null;
-  document.addEventListener('touchstart', e => x0 = e.touches[0].clientX);
+  document.addEventListener('touchstart', e => x0 = e.touches[0].clientX, { passive: true });
   document.addEventListener('touchend', e => {
     if (x0 === null) return;
     const dx = e.changedTouches[0].clientX - x0;
@@ -178,8 +180,12 @@
     x0 = null;
   });
   document.getElementById('full').onclick = () => {
-    if (document.fullscreenElement) document.exitFullscreen();
-    else document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+    const d = document, el = d.documentElement;
+    try {
+      if (d.fullscreenElement || d.webkitFullscreenElement) (d.exitFullscreen || d.webkitExitFullscreen).call(d);
+      else if (el.requestFullscreen) el.requestFullscreen();
+      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    } catch (err) {}
   };
   // Count hands: tap an answer once for every hand up. The top answer turns pink.
   const groups = [...document.querySelectorAll('.choices')];
